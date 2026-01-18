@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Details</title>
+</head>
+<body>
+
+<h2>User Details</h2>
+
+<p><strong>Username:</strong> <span th:text="${user.username}"></span></p>
+<p><strong>Surname:</strong> <span th:text="${user.usersurname}"></span></p>
+<p><strong>Password:</strong> <span th:text="${user.password}"></span></p>
+
+<h3>Upload an Image</h3>
+<form th:action="@{/uploadImage}" method="post" enctype="multipart/form-data">
+    <!-- Hidden field to pass user ID -->
+    <input type="hidden" name="userId" th:value="${user.id}" />
+
+    <label>Select Image:</label>
+    <input type="file" name="imageFile" accept="image/*" required /><br><br>
+
+    <button type="submit">Upload</button>
+</form>
+
+<hr>
+<a href="/users">Show all users data</a>
+<a href="/">Logout</a>
+
+</body>
+</html>
