@@ -1,9 +1,9 @@
 pipeline {
     agent any
 
-tools {
-    jdk 'JDK17'
-}
+    tools {
+        jdk 'JDK17'
+    }
 
     stages {
         stage('Checkout') {
@@ -15,8 +15,8 @@ tools {
         stage('Build Java Project') {
             steps {
                 dir('backend-java') {
-                    sh './gradlew build'  // on Linux/Mac
-                    // on Windows use: bat 'gradlew.bat build'
+                    sh './gradlew build'  // Linux/Mac
+                    // If running on Windows agent, use: bat 'gradlew.bat build'
                 }
             }
         }
@@ -24,8 +24,12 @@ tools {
         stage('Build Python Project') {
             steps {
                 dir('backend-python') {
-                    sh 'pip install -r requirements.txt'
-                    // Optional: run tests if you have any
+                    // Use official Python 3.12 Docker image to run Python commands
+                    docker.image('python:3.12').inside {
+                        sh 'pip install --upgrade pip'
+                        sh 'pip install -r requirements.txt'
+                        // Optional: run tests, e.g., sh 'pytest'
+                    }
                 }
             }
         }
