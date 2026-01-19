@@ -15,8 +15,8 @@ pipeline {
         stage('Build Java Project') {
             steps {
                 dir('backend-java') {
-                    sh './gradlew build'  // Linux/Mac
-                    // If running on Windows agent, use: bat 'gradlew.bat build'
+                    sh './gradlew build'  // on Linux/Mac
+                    // on Windows use: bat 'gradlew.bat build'
                 }
             }
         }
@@ -24,12 +24,11 @@ pipeline {
         stage('Build Python Project') {
             steps {
                 dir('backend-python') {
-                    // Use official Python 3.12 Docker image to run Python commands
-                    docker.image('python:3.12').inside {
-                        sh 'pip install --upgrade pip'
-                        sh 'pip install -r requirements.txt'
-                        // Optional: run tests, e.g., sh 'pytest'
-                    }
+                    // Use Python from Jenkins container
+                    sh 'python3 -m venv venv'
+                    sh './venv/bin/pip install --upgrade pip'
+                    sh './venv/bin/pip install -r requirements.txt'
+                    // Optional: run tests if you have any
                 }
             }
         }
