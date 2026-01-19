@@ -26,7 +26,7 @@ pipeline {
         dir('backend-python') {
             sh 'python3 -m venv venv'
             sh './venv/bin/pip install --upgrade pip'
-            sh './venv/bin/pip install -r requirements.txt || true'
+            sh './venv/bin/pip install -r requirements.txt'
         }
     }
 }
