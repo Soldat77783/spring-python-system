@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>User Images</title>
+</head>
+<body>
+
+<h2 th:text="'Images for User ' + ${userId}"></h2>
+
+<div th:if="${images.size() == 0}">
+    <p>No images found.</p>
+</div>
+
+<div th:each="img : ${images}">
+    <div style="margin-bottom: 20px;">
+        <p><strong>Name:</strong> <span th:text="${img.image_name}"></span></p>
+        <p><strong>Type:</strong> <span th:text="${img.image_type}"></span></p>
+        <p><strong>Uploaded:</strong> <span th:text="${img.uploaded_at}"></span></p>
+
+        <img th:src="'data:' + ${img.image_type} + ';base64,' + ${img.image_data}"
+             style="max-width: 300px; border: 1px solid #ccc; padding: 5px;" />
+    </div>
+</div>
+
+</body>
+</html>

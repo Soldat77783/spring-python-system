@@ -1,6 +1,9 @@
 package com.example.javawebclient.repository;
 
 import com.example.javawebclient.dto.user_image;
+import com.example.javawebclient.dto.user_image_download_DTO;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
 
 import java.io.File;
 import java.net.URI;
@@ -8,12 +11,16 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.nio.file.Files;
 import java.net.http.HttpResponse;
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 public class UserImageRepository {
 
     private static final String UPLOAD_IMAGE_API_URL = "http://127.0.0.1:8000/upload-image";
+    private static final String DOWNLOAD_IMAGE_API_URL = "http://127.0.0.1:8000/get_user_images";
 
+    //method to upload a user specific image
     public void uploadImage(user_image imageDTO) {
         try {
             String boundary = UUID.randomUUID().toString();
@@ -52,6 +59,17 @@ public class UserImageRepository {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    //method to get the specific users images
+    public List<user_image_download_DTO> GetUserImages(int id)
+    {
+        String URL = DOWNLOAD_IMAGE_API_URL + "?user_id=" + id;
+
+        RestTemplate restTemplate = new RestTemplate();  //RestTemplate is good for downloading
+        ResponseEntity<user_image_download_DTO[]> response = restTemplate.getForEntity(URL, user_image_download_DTO[].class);
+
+        return Arrays.asList(response.getBody());
     }
 
 }

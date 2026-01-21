@@ -3,6 +3,7 @@ package com.example.javawebclient.controller;
 import com.example.javawebclient.dto.UserDTO;
 import com.example.javawebclient.dto.logginCredentialsDTO;
 import com.example.javawebclient.service.UserService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -44,7 +45,7 @@ public class UserController {
     }
 
     @PostMapping("/loginUser")
-    public String loginUser(@RequestParam String username, @RequestParam String password, Model model)
+    public String loginUser(@RequestParam String username, @RequestParam String password, Model model, HttpSession session)
     {
         logginCredentialsDTO loginCredentials = new logginCredentialsDTO();
         loginCredentials.username = username;
@@ -55,6 +56,8 @@ public class UserController {
         if (user == null) {
             return "login"; // could add a message for invalid login
         }
+
+        session.setAttribute("loggedInUser", user); //here i am storing the user details so i can use the id across pages
 
         model.addAttribute("user", user);  //this is a key-value pair user user
         return "user-result"; // user-result.html to display data
