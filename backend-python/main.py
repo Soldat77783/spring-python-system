@@ -1,10 +1,12 @@
 from fastapi import FastAPI, Form
 from routes.laptop_image_routes import router as image_router
+from routes.laptop_image_description_routes import router as image_description_router
 import mysql.connector
 
 app = FastAPI()
 
 app.include_router(image_router)
+app.include_router(image_description_router)
 
 def get_connection():
     return mysql.connector.connect(

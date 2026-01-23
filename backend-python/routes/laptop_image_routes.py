@@ -52,6 +52,7 @@ def get_user_images(user_id: int):
                 results.append({"id": row[0], "user_id": row[1], "image_name": row[2], "image_type": row[3], "image_data": base64.b64encode(row[4]).decode("utf-8"),
                                  "uploaded_at": row[5]})
     finally:
+        conn.commit()
         conn.close()
         cursor.close()
 
