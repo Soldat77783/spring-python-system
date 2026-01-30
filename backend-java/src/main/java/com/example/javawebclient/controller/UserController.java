@@ -59,6 +59,10 @@ public class UserController {
 
         session.setAttribute("loggedInUser", user); //here i am storing the user details so i can use the id across pages
 
+        // ⭐ Store JWT token in session
+        session.setAttribute("token", user.token);
+        System.out.println("LOGGED IN WITH TOKEN: " + user.token);
+
         model.addAttribute("user", user);  //this is a key-value pair user user
         return "user-result"; // user-result.html to display data
     }

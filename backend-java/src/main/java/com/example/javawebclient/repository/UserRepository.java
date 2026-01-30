@@ -59,6 +59,7 @@ public class UserRepository {
     //log the user in (unique user based on username and password)
     public UserDTO loginUser(logginCredentialsDTO logginCredentials) {
         UserDTO user = null;
+
         try {
             HttpClient client = HttpClient.newHttpClient();
 
@@ -75,12 +76,20 @@ public class UserRepository {
 
             System.out.println("API Response after login: " + response.body());
 
-            // Parse the JSON properly
-            JsonObject jsonObject = JsonParser.parseString(response.body()).getAsJsonObject();
+            JsonObject json = JsonParser.parseString(response.body()).getAsJsonObject();
 
-            if (jsonObject.has("result") && !jsonObject.get("result").isJsonNull())
-            {
-                user = new Gson().fromJson(jsonObject.get("result"), UserDTO.class);
+            // Check success
+            if (json.has("success") && json.get("success").getAsBoolean()) {
+
+                // Extract token
+                String token = json.get("token").getAsString();
+
+                // Extract user object
+                JsonObject userJson = json.get("user").getAsJsonObject();
+                user = new Gson().fromJson(userJson, UserDTO.class);
+
+                // Store token in DTO
+                user.token = token;
             }
 
         } catch (Exception e) {

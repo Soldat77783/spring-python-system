@@ -2,6 +2,9 @@ package com.example.javawebclient.repository;
 
 import com.example.javawebclient.dto.user_image;
 import com.example.javawebclient.dto.user_image_download_DTO;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
@@ -61,13 +64,27 @@ public class UserImageRepository {
         }
     }
 
-    //method to get the specific users images
-    public List<user_image_download_DTO> GetUserImages(int id)
+    public List<user_image_download_DTO> GetUserImages(int id, String token)
     {
         String URL = DOWNLOAD_IMAGE_API_URL + "?user_id=" + id;
 
-        RestTemplate restTemplate = new RestTemplate();  //RestTemplate is good for downloading
-        ResponseEntity<user_image_download_DTO[]> response = restTemplate.getForEntity(URL, user_image_download_DTO[].class);
+        RestTemplate restTemplate = new RestTemplate();
+
+        // Create headers
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + token);
+
+        // Correct: body = null, headers = headers
+        HttpEntity<String> entity = new HttpEntity<>(null, headers);
+
+        // Use exchange() to send headers
+        ResponseEntity<user_image_download_DTO[]> response =
+                restTemplate.exchange(
+                        URL,
+                        HttpMethod.GET,
+                        entity,
+                        user_image_download_DTO[].class
+                );
 
         return Arrays.asList(response.getBody());
     }

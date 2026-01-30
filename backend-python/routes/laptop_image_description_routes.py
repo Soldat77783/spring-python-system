@@ -18,26 +18,38 @@ async def set_Image_Description(id: int = Form(...), description: str = Form(...
 
         return {f"Description {id} {description} description uploaded successfully!"}
 
-#get the image description that belongs to the specific user
-@router.get("/get_image_description")
-async def set_Image_Description(id: int):
+@router.get("/Get_Image_Description")
+async def get_image_description(id: int):
     conn = get_connection()
     cursor = conn.cursor()
 
     try:
-         cursor.callproc("set_user_images_with_description", [id])
-         conn.commit()
+        cursor.callproc("Get_Image_Description", [id])
 
-         result = []
+        rows = []
+        for res in cursor.stored_results():
+            rows = res.fetchall()
 
-         for res in cursor.stored_results():
-            result = res.fetchall()
+        #convert rows → JSON objects
+        results = []
+        for row in rows:
+            results.append({
+                "id": row[0],
+                "description": row[1],
+                "updated_at": row[2],
+                "created_at": row[3],
+                "image_id": row[4],
+                "user_id": row[5],
+                "image_name": row[6],
+                "image_type": row[7],
+                "uploaded_at": row[8]
+            })
+
+        return results
 
     finally:
-        conn.close()
         cursor.close()
-
-        return result
+        conn.close()
 
     
 

@@ -18,8 +18,8 @@ public class UserImageService implements IUserImageService
         repository.uploadImage(imageDTO);
     }
 
-    public List<user_image_download_DTO> GetUserImages(int id)
+    public List<user_image_download_DTO> GetUserImages(int id, String token)
     {
-        return repository.GetUserImages(id);
+        return repository.GetUserImages(id, token);
     }
 }
