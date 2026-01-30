@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Set Image Description</title>
+</head>
+<body>
+
+<h2>Set Description for Image</h2>
+
+<form th:action="@{/setImageDescription}" method="post">
+
+    <!-- Hidden ID -->
+    <input type="hidden" name="id" th:value="${imageId}" />
+
+    <!-- Textbox -->
+    <label>Description:</label><br>
+    <textarea name="description" rows="4" cols="50"></textarea><br><br>
+
+    <button type="submit">Save Description</button>
+</form>
+
+</body>
+</html>

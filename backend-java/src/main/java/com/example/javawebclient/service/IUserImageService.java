@@ -9,5 +9,5 @@ import java.util.List;
 public interface IUserImageService
 {
     public void uploadImage(user_image imageDTO);
-    public List<user_image_download_DTO> GetUserImages(int id);
+    public List<user_image_download_DTO> GetUserImages(int id, String token);
 }

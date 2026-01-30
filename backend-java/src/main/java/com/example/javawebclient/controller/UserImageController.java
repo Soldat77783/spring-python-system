@@ -1,8 +1,10 @@
 package com.example.javawebclient.controller;
 
 import com.example.javawebclient.dto.UserDTO;
+import com.example.javawebclient.dto.get_image_description_DTO;
 import com.example.javawebclient.dto.user_image;
 import com.example.javawebclient.dto.user_image_download_DTO;
+import com.example.javawebclient.service.IImageDescription;
 import com.example.javawebclient.service.IUserImageService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,11 +24,13 @@ import java.util.List;
 public class UserImageController
 {
     private final IUserImageService iUserImageService;
+    private final IImageDescription iImageDescription;
 
     @Autowired
-    public UserImageController(IUserImageService iuserImageService)
+    public UserImageController(IUserImageService iuserImageService, IImageDescription iImageDescription)
     {
         this.iUserImageService = iuserImageService;
+        this.iImageDescription = iImageDescription;
     }
 
     @PostMapping("/uploadImage")
@@ -54,6 +58,7 @@ public class UserImageController
     public String GetUserImages(HttpSession session, Model model)
     {
         UserDTO user = (UserDTO) session.getAttribute("loggedInUser");
+        String token = (String) session.getAttribute("token");
 
         if(user == null)
         {
@@ -62,7 +67,17 @@ public class UserImageController
 
         int userId = user.id;
 
-        List<user_image_download_DTO> images = iUserImageService.GetUserImages(userId);
+        List<user_image_download_DTO> images = iUserImageService.GetUserImages(userId, token);
+        System.out.println("ACCESSED GetUserImages(userId, token) USING TOKEN: " + token);
+
+        for(user_image_download_DTO img : images)
+        {
+            List<get_image_description_DTO> desc = iImageDescription.GetImageDescriptions(img.id, token);
+            img.setDescriptions(desc);
+
+            System.out.println("Descriptions for image " + img.id + ": " + desc.size());
+            System.out.println("ACCESSED GetImageDescriptions(img.id, token) USING TOKEN: " + token);
+        }
 
         model.addAttribute("userId", userId);
         model.addAttribute("images", images);

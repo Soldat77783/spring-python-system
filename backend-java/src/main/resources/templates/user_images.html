@@ -13,12 +13,33 @@
 
 <div th:each="img : ${images}">
     <div style="margin-bottom: 20px;">
+        <p><strong>ID:</strong> <span th:text="${img.id}"></span></p>
         <p><strong>Name:</strong> <span th:text="${img.image_name}"></span></p>
         <p><strong>Type:</strong> <span th:text="${img.image_type}"></span></p>
         <p><strong>Uploaded:</strong> <span th:text="${img.uploaded_at}"></span></p>
 
+        <a th:href="@{/image-description(imageId=${img.id})}">
         <img th:src="'data:' + ${img.image_type} + ';base64,' + ${img.image_data}"
              style="max-width: 300px; border: 1px solid #ccc; padding: 5px;" />
+        </a>
+
+        <!--  show descriptions -->
+        <div style="margin-top: 10px;">
+            <h4>Descriptions:</h4>
+
+            <div th:if="${img.descriptions == null or img.descriptions.size() == 0}">
+                <p>No descriptions yet.</p>
+            </div>
+
+            <ul th:each="desc : ${img.descriptions}">
+                <li>
+                    <strong th:text="${desc.createdAt}"></strong>:
+                    <span th:text="${desc.description}"></span>
+                </li>
+            </ul>
+        </div>
+
+
     </div>
 </div>
 

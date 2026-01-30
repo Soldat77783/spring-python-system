@@ -6,4 +6,5 @@ public class UserDTO
     public String username;
     public String usersurname;
     public String password;
+    public String token;
 }

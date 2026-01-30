@@ -1,7 +1,17 @@
 from fastapi import FastAPI, Form
+from dotenv import load_dotenv #JWT token stuff
 from routes.laptop_image_routes import router as image_router
 from routes.laptop_image_description_routes import router as image_description_router
 import mysql.connector
+import os #JWT token stuff
+import jwt #JWT token stuff
+from datetime import datetime, timedelta #JWT token stuff
+
+#JWT token stuff
+load_dotenv()
+
+#JWT token stuff
+SECRET_KEY = os.getenv("JWT_SECRET_KEY")
 
 app = FastAPI()
 
@@ -82,13 +92,33 @@ def register_user(username: str = Form(...), usersurname: str = Form(...)):
 @app.post("/login")
 def login_user(password: str = Form(...), username: str = Form(...)):
     conn = get_connection()
-    cursor = conn.cursor(dictionary = True) #dictionary = True displays data nicely instead of all inline
-    cursor.execute("SELECT id, username, usersurname FROM users WHERE username = %s AND password = %s", (username, password))
+    cursor = conn.cursor(dictionary=True)
+
+    cursor.execute(
+        "SELECT id, username, usersurname FROM users WHERE username = %s AND password = %s",
+        (username, password)
+    )
     result = cursor.fetchone()
+
     cursor.close()
     conn.close()
 
+    # First check if user exists
     if result is None:
         return {"success": False, "message": "Invalid user credentials"}
-    
-    return{"success": True, "result": result}
+
+    # Only now create the JWT
+    payload = {
+        "user_id": result["id"],
+        "username": result["username"],
+        "exp": datetime.utcnow() + timedelta(hours=2)
+    }
+
+    token = jwt.encode(payload, SECRET_KEY, algorithm="HS256")
+
+    # Return both token and user info
+    return {
+        "success": True,
+        "token": token,
+        "user": result
+    }
