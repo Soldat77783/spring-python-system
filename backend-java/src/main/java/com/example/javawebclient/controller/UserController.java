@@ -28,6 +28,7 @@ public class UserController {
         return "register"; // register.html in templates
     }
 
+    //NOT adding bearer tokens here there is no logged in user
     @PostMapping("/register")
     public String registerUser(@RequestParam String username, @RequestParam String usersurname, @RequestParam String password) {
         UserDTO userDTO = new UserDTO();
