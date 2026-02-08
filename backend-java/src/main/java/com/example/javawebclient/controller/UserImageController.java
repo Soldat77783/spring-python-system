@@ -64,9 +64,7 @@ public class UserImageController
         {
             return "redirect:/login";
         }
-
         int userId = user.id;
-
         List<user_image_download_DTO> images = iUserImageService.GetUserImages(userId, token);
         System.out.println("ACCESSED GetUserImages(userId, token) USING TOKEN: " + token);
 
@@ -78,7 +76,6 @@ public class UserImageController
             System.out.println("Descriptions for image " + img.id + ": " + desc.size());
             System.out.println("ACCESSED GetImageDescriptions(img.id, token) USING TOKEN: " + token);
         }
-
         model.addAttribute("userId", userId);
         model.addAttribute("images", images);
 
